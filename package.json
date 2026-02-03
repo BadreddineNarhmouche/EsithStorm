@@ -1,0 +1,10 @@
+{
+  "name": "Gestion textile",
+  "private": true,
+  "scripts": {
+    "install:frontend": "npm install --prefix frontend",
+    "start": "npm start --prefix frontend",
+    "build": "npm run build --prefix frontend"
+  },
+  "description": "Gestion textile - Gestion textile (backend Java JEE + frontend Angular)"
+}

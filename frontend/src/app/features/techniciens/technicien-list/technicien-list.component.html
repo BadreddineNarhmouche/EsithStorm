@@ -1,0 +1,90 @@
+<h2 class="section-title">Techniciens</h2>
+<p class="section-desc">Gestion des techniciens (compétences, expérience, disponibilité).</p>
+
+<div class="toolbar card">
+  <div class="filters">
+    <input type="text" [(ngModel)]="search" (ngModelChange)="load()" placeholder="Recherche" class="filter-input" />
+    <select [(ngModel)]="disponibilite" (ngModelChange)="load()" class="filter-input">
+      <option value="">Tous</option>
+      <option value="LIBRE">Libre</option>
+      <option value="OCCUPE">Occupé</option>
+    </select>
+    <input type="text" [(ngModel)]="competences" (ngModelChange)="load()" placeholder="Compétences" class="filter-input" />
+    <button type="button" class="btn btn-secondary" (click)="load()">Filtrer</button>
+  </div>
+  <button type="button" class="btn btn-secondary" (click)="exportCsv()">Export CSV</button>
+  <button type="button" class="btn btn-primary" (click)="openAdd()">+ Nouveau technicien</button>
+</div>
+
+<p class="error-msg" *ngIf="error">{{ error }}</p>
+<div *ngIf="loading" class="loading">Chargement…</div>
+
+<div *ngIf="!loading" class="table-wrap card">
+  <table>
+    <thead>
+      <tr>
+        <th class="sortable" (click)="sortBy('nom')">Nom {{ sortColumn === 'nom' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th class="sortable" (click)="sortBy('prenom')">Prénom {{ sortColumn === 'prenom' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th class="sortable" (click)="sortBy('competences')">Compétences {{ sortColumn === 'competences' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th>Expérience (années)</th>
+        <th class="sortable" (click)="sortBy('disponibilite')">Disponibilité {{ sortColumn === 'disponibilite' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of sortedList">
+        <td>{{ t.nom }} {{ t.prenom }}</td>
+        <td>{{ t.competences }}</td>
+        <td>{{ t.experienceAnnees }}</td>
+        <td>{{ t.disponibilite }}</td>
+        <td>{{ t.email }}</td>
+        <td class="actions">
+          <button type="button" class="btn btn-secondary" (click)="openEdit(t)">Modifier</button>
+          <button type="button" class="btn btn-danger" (click)="delete(t)">Supprimer</button>
+        </td>
+      </tr>
+      <tr *ngIf="list.length === 0"><td colspan="6" class="empty">Aucun technicien.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal" *ngIf="showForm" (click)="closeForm()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
+    <h3>{{ editing ? 'Modifier le technicien' : 'Nouveau technicien' }}</h3>
+    <form (ngSubmit)="save()">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input [(ngModel)]="form.nom" name="nom" required />
+      </div>
+      <div class="form-group">
+        <label>Prénom</label>
+        <input [(ngModel)]="form.prenom" name="prenom" />
+      </div>
+      <div class="form-group">
+        <label>Compétences</label>
+        <input [(ngModel)]="form.competences" name="competences" />
+      </div>
+      <div class="form-group">
+        <label>Expérience (années)</label>
+        <input type="number" [(ngModel)]="form.experienceAnnees" name="experienceAnnees" />
+      </div>
+      <div class="form-group">
+        <label>Disponibilité</label>
+        <select [(ngModel)]="form.disponibilite" name="disponibilite">
+          <option value="LIBRE">Libre</option>
+          <option value="OCCUPE">Occupé</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="form.email" name="email" />
+      </div>
+      <p class="error-msg" *ngIf="error">{{ error }}</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeForm()">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="submitting">{{ submitting ? 'Enregistrement…' : 'Enregistrer' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

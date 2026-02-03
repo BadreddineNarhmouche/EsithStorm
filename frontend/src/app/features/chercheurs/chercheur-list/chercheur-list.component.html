@@ -1,0 +1,83 @@
+<h2 class="section-title">Chercheurs</h2>
+<p class="section-desc">Gestion des chercheurs (domaines de recherche, matériaux étudiés, publications).</p>
+
+<div class="toolbar card">
+  <div class="filters">
+    <input type="text" [(ngModel)]="search" (ngModelChange)="load()" placeholder="Recherche" class="filter-input" />
+    <input type="text" [(ngModel)]="domaines" (ngModelChange)="load()" placeholder="Domaines" class="filter-input" />
+    <input type="text" [(ngModel)]="materiaux" (ngModelChange)="load()" placeholder="Matériaux" class="filter-input" />
+    <button type="button" class="btn btn-secondary" (click)="load()">Filtrer</button>
+  </div>
+  <button type="button" class="btn btn-secondary" (click)="exportCsv()">Export CSV</button>
+  <button type="button" class="btn btn-primary" (click)="openAdd()">+ Nouveau chercheur</button>
+</div>
+
+<p class="error-msg" *ngIf="error">{{ error }}</p>
+<div *ngIf="loading" class="loading">Chargement…</div>
+
+<div *ngIf="!loading" class="table-wrap card">
+  <table>
+    <thead>
+      <tr>
+        <th class="sortable" (click)="sortBy('nom')">Nom {{ sortColumn === 'nom' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th class="sortable" (click)="sortBy('prenom')">Prénom {{ sortColumn === 'prenom' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th class="sortable" (click)="sortBy('domainesRecherche')">Domaines {{ sortColumn === 'domainesRecherche' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th>Matériaux étudiés</th>
+        <th>Publications</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of sortedList">
+        <td>{{ c.nom }} {{ c.prenom }}</td>
+        <td>{{ c.domainesRecherche }}</td>
+        <td>{{ c.materiauxEtudies }}</td>
+        <td>{{ c.publications }}</td>
+        <td>{{ c.email }}</td>
+        <td class="actions">
+          <button type="button" class="btn btn-secondary" (click)="openEdit(c)">Modifier</button>
+          <button type="button" class="btn btn-danger" (click)="delete(c)">Supprimer</button>
+        </td>
+      </tr>
+      <tr *ngIf="list.length === 0"><td colspan="6" class="empty">Aucun chercheur.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal" *ngIf="showForm" (click)="closeForm()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
+    <h3>{{ editing ? 'Modifier le chercheur' : 'Nouveau chercheur' }}</h3>
+    <form (ngSubmit)="save()">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input [(ngModel)]="form.nom" name="nom" required />
+      </div>
+      <div class="form-group">
+        <label>Prénom</label>
+        <input [(ngModel)]="form.prenom" name="prenom" />
+      </div>
+      <div class="form-group">
+        <label>Domaines de recherche</label>
+        <input [(ngModel)]="form.domainesRecherche" name="domainesRecherche" />
+      </div>
+      <div class="form-group">
+        <label>Matériaux étudiés</label>
+        <input [(ngModel)]="form.materiauxEtudies" name="materiauxEtudies" />
+      </div>
+      <div class="form-group">
+        <label>Publications</label>
+        <textarea [(ngModel)]="form.publications" name="publications"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="form.email" name="email" />
+      </div>
+      <p class="error-msg" *ngIf="error">{{ error }}</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeForm()">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="submitting">{{ submitting ? 'Enregistrement…' : 'Enregistrer' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

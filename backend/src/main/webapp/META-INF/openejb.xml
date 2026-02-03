@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Utilisé par TomEE pour le démarrage local : base H2 en mémoire.
+     En production (Payara/WildFly), configurer la datasource dans le serveur. -->
+<openejb xmlns="http://openejb.apache.org/xml/ns/openejb-jar"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://openejb.apache.org/xml/ns/openejb-jar http://openejb.apache.org/xml/ns/openejb-jar/openejb-jar.xsd">
+    <Resource id="EsithStormDS" type="DataSource">
+        JdbcDriver = org.h2.Driver
+        JdbcUrl = jdbc:h2:mem:esithstorm;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;INIT=CREATE SCHEMA IF NOT EXISTS PUBLIC
+        UserName = sa
+        Password =
+    </Resource>
+    <persistence-unit id="esithstormPU">
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</openejb>

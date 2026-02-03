@@ -1,0 +1,40 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h1 class="logo">EsithStorm</h1>
+      <span class="tagline">Gestion textile</span>
+      <span class="demo-badge" *ngIf="isDemo">Mode démo</span>
+    </div>
+    <nav class="nav">
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Tableau de bord</a>
+      <a routerLink="/entreprises" routerLinkActive="active">Entreprises</a>
+      <a routerLink="/fournisseurs" routerLinkActive="active">Fournisseurs</a>
+      <a routerLink="/ateliers" routerLinkActive="active">Ateliers</a>
+      <a routerLink="/techniciens" routerLinkActive="active">Techniciens</a>
+      <a routerLink="/chercheurs" routerLinkActive="active">Chercheurs</a>
+    </nav>
+    <div class="sidebar-footer">
+      <span class="user">{{ auth.user()?.username }}</span>
+      <span class="role">{{ auth.user()?.role }}</span>
+      <button type="button" class="btn btn-secondary" (click)="auth.logout()">Déconnexion</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="header">
+      <h2 class="page-title">EsithStorm</h2>
+      <div class="global-search" *ngIf="isDemo">
+        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchInput()" (focus)="onSearchInput()" (blur)="closeSearch()" (keydown.escape)="clearSearch()" placeholder="Recherche globale (nom, email)…" class="search-input" />
+        <div class="search-dropdown" *ngIf="showSearchDropdown && searchResults.length">
+          <a *ngFor="let r of searchResults" (mousedown)="goToResult(r)" class="search-item">
+            <span class="search-type">{{ r.type }}</span>
+            <span class="search-label">{{ r.label }}</span>
+          </a>
+        </div>
+      </div>
+    </header>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+    <app-toast></app-toast>
+  </main>
+</div>

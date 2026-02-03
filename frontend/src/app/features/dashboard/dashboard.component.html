@@ -1,0 +1,98 @@
+<h2 class="section-title">Tableau de bord</h2>
+<p class="section-desc">Vue d’ensemble des acteurs du secteur textile.</p>
+
+<div *ngIf="loading" class="loading">Chargement des statistiques…</div>
+<p *ngIf="error" class="error-msg">{{ error }}</p>
+
+<div *ngIf="stats && !loading" class="dashboard">
+  <div class="stats-grid">
+    <div class="stat-card card" [routerLink]="['/entreprises']">
+      <span class="stat-value">{{ stats.entreprises }}</span>
+      <span class="stat-label">Entreprises</span>
+    </div>
+    <div class="stat-card card" [routerLink]="['/fournisseurs']">
+      <span class="stat-value">{{ stats.fournisseurs }}</span>
+      <span class="stat-label">Fournisseurs</span>
+    </div>
+    <div class="stat-card card" [routerLink]="['/ateliers']">
+      <span class="stat-value">{{ stats.ateliers }}</span>
+      <span class="stat-label">Ateliers</span>
+    </div>
+    <div class="stat-card card" [routerLink]="['/techniciens']">
+      <span class="stat-value">{{ stats.techniciens }}</span>
+      <span class="stat-label">Techniciens</span>
+    </div>
+    <div class="stat-card card" [routerLink]="['/chercheurs']">
+      <span class="stat-value">{{ stats.chercheurs }}</span>
+      <span class="stat-label">Chercheurs</span>
+    </div>
+  </div>
+  <div class="card chart-card">
+    <h3>Répartition par type d’acteur</h3>
+    <div class="chart-bars" *ngIf="stats.total > 0">
+      <div class="bar-row">
+        <span class="bar-label">Entreprises</span>
+        <div class="bar-bg"><div class="bar-fill" [style.width.%]="getPercent('entreprises', stats.total)"></div></div>
+        <span class="bar-value">{{ stats.entreprises }} ({{ getPercent('entreprises', stats.total) }}%)</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Fournisseurs</span>
+        <div class="bar-bg"><div class="bar-fill" [style.width.%]="getPercent('fournisseurs', stats.total)"></div></div>
+        <span class="bar-value">{{ stats.fournisseurs }} ({{ getPercent('fournisseurs', stats.total) }}%)</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Ateliers</span>
+        <div class="bar-bg"><div class="bar-fill" [style.width.%]="getPercent('ateliers', stats.total)"></div></div>
+        <span class="bar-value">{{ stats.ateliers }} ({{ getPercent('ateliers', stats.total) }}%)</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Techniciens</span>
+        <div class="bar-bg"><div class="bar-fill" [style.width.%]="getPercent('techniciens', stats.total)"></div></div>
+        <span class="bar-value">{{ stats.techniciens }} ({{ getPercent('techniciens', stats.total) }}%)</span>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Chercheurs</span>
+        <div class="bar-bg"><div class="bar-fill" [style.width.%]="getPercent('chercheurs', stats.total)"></div></div>
+        <span class="bar-value">{{ stats.chercheurs }} ({{ getPercent('chercheurs', stats.total) }}%)</span>
+      </div>
+    </div>
+    <p *ngIf="stats.total === 0" class="muted">Aucune donnée pour afficher le graphique.</p>
+  </div>
+
+  <div class="card recent-card" *ngIf="recent">
+    <h3>Derniers ajouts</h3>
+    <div class="recent-grid">
+      <div class="recent-col" *ngIf="recent.entreprises?.length">
+        <h4 [routerLink]="['/entreprises']" class="recent-title">Entreprises</h4>
+        <ul>
+          <li *ngFor="let e of recent.entreprises"><a [routerLink]="['/entreprises']">{{ e.nom }}</a></li>
+        </ul>
+      </div>
+      <div class="recent-col" *ngIf="recent.fournisseurs?.length">
+        <h4 [routerLink]="['/fournisseurs']" class="recent-title">Fournisseurs</h4>
+        <ul>
+          <li *ngFor="let f of recent.fournisseurs"><a [routerLink]="['/fournisseurs']">{{ f.nom }}</a></li>
+        </ul>
+      </div>
+      <div class="recent-col" *ngIf="recent.ateliers?.length">
+        <h4 [routerLink]="['/ateliers']" class="recent-title">Ateliers</h4>
+        <ul>
+          <li *ngFor="let a of recent.ateliers"><a [routerLink]="['/ateliers']">{{ a.nom }}</a></li>
+        </ul>
+      </div>
+      <div class="recent-col" *ngIf="recent.techniciens?.length">
+        <h4 [routerLink]="['/techniciens']" class="recent-title">Techniciens</h4>
+        <ul>
+          <li *ngFor="let t of recent.techniciens"><a [routerLink]="['/techniciens']">{{ t.nom }} {{ t.prenom }}</a></li>
+        </ul>
+      </div>
+      <div class="recent-col" *ngIf="recent.chercheurs?.length">
+        <h4 [routerLink]="['/chercheurs']" class="recent-title">Chercheurs</h4>
+        <ul>
+          <li *ngFor="let c of recent.chercheurs"><a [routerLink]="['/chercheurs']">{{ c.nom }} {{ c.prenom }}</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="muted" *ngIf="!recent?.entreprises?.length && !recent?.fournisseurs?.length && !recent?.ateliers?.length && !recent?.techniciens?.length && !recent?.chercheurs?.length">Aucun enregistrement récent.</p>
+  </div>
+</div>

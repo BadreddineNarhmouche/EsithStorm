@@ -1,0 +1,82 @@
+<h2 class="section-title">Ateliers</h2>
+<p class="section-desc">Gestion des ateliers (type de production, capacité, équipements).</p>
+
+<div class="toolbar card">
+  <div class="filters">
+    <input type="text" [(ngModel)]="search" (ngModelChange)="load()" placeholder="Recherche" class="filter-input" />
+    <input type="text" [(ngModel)]="pays" (ngModelChange)="load()" placeholder="Pays" class="filter-input" />
+    <input type="text" [(ngModel)]="typeProduction" (ngModelChange)="load()" placeholder="Type production" class="filter-input" />
+    <button type="button" class="btn btn-secondary" (click)="load()">Filtrer</button>
+  </div>
+  <button type="button" class="btn btn-secondary" (click)="exportCsv()">Export CSV</button>
+  <button type="button" class="btn btn-primary" (click)="openAdd()">+ Nouvel atelier</button>
+</div>
+
+<p class="error-msg" *ngIf="error">{{ error }}</p>
+<div *ngIf="loading" class="loading">Chargement…</div>
+
+<div *ngIf="!loading" class="table-wrap card">
+  <table>
+    <thead>
+      <tr>
+        <th class="sortable" (click)="sortBy('nom')">Nom {{ sortColumn === 'nom' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th class="sortable" (click)="sortBy('typeProduction')">Type {{ sortColumn === 'typeProduction' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th class="sortable" (click)="sortBy('capacite')">Capacité {{ sortColumn === 'capacite' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th>Équipements</th>
+        <th class="sortable" (click)="sortBy('ville')">Ville / Pays {{ sortColumn === 'ville' ? (sortAsc ? '↑' : '↓') : '' }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of sortedList">
+        <td>{{ a.nom }}</td>
+        <td>{{ a.typeProduction }}</td>
+        <td>{{ a.capacite }}</td>
+        <td>{{ a.equipements }}</td>
+        <td>{{ a.ville }} / {{ a.pays }}</td>
+        <td class="actions">
+          <button type="button" class="btn btn-secondary" (click)="openEdit(a)">Modifier</button>
+          <button type="button" class="btn btn-danger" (click)="delete(a)">Supprimer</button>
+        </td>
+      </tr>
+      <tr *ngIf="list.length === 0"><td colspan="6" class="empty">Aucun atelier.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal" *ngIf="showForm" (click)="closeForm()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
+    <h3>{{ editing ? 'Modifier l\'atelier' : 'Nouvel atelier' }}</h3>
+    <form (ngSubmit)="save()">
+      <div class="form-group">
+        <label>Nom *</label>
+        <input [(ngModel)]="form.nom" name="nom" required />
+      </div>
+      <div class="form-group">
+        <label>Type de production</label>
+        <input [(ngModel)]="form.typeProduction" name="typeProduction" />
+      </div>
+      <div class="form-group">
+        <label>Capacité</label>
+        <input [(ngModel)]="form.capacite" name="capacite" />
+      </div>
+      <div class="form-group">
+        <label>Équipements</label>
+        <textarea [(ngModel)]="form.equipements" name="equipements"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Ville</label>
+        <input [(ngModel)]="form.ville" name="ville" />
+      </div>
+      <div class="form-group">
+        <label>Pays</label>
+        <input [(ngModel)]="form.pays" name="pays" />
+      </div>
+      <p class="error-msg" *ngIf="error">{{ error }}</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="closeForm()">Annuler</button>
+        <button type="submit" class="btn btn-primary" [disabled]="submitting">{{ submitting ? 'Enregistrement…' : 'Enregistrer' }}</button>
+      </div>
+    </form>
+  </div>
+</div>
