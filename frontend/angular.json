@@ -19,7 +19,11 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/assets"],
+            "assets": [
+              "src/assets",
+              "src/_redirects"
+            ],
+
             "styles": ["src/styles.scss"],
             "scripts": []
           },
@@ -40,11 +44,7 @@
           "options": {
             "buildTarget": "frontend:build:development"
           },
-          "assets": [
-            "src/favicon.ico",
-            "src/assets",
-            "src/_redirects"
-          ],
+         
 
           "configurations": {
             "production": {
