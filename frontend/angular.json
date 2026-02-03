@@ -40,6 +40,12 @@
           "options": {
             "buildTarget": "frontend:build:development"
           },
+          "assets": [
+            "src/favicon.ico",
+            "src/assets",
+            "src/_redirects"
+          ],
+
           "configurations": {
             "production": {
               "buildTarget": "frontend:build:production"
